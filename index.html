@@ -4,152 +4,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VVR Autos Live Dashboard</title>
+    <title>VVR Autos Dashboard</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Chart JS -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
+
 <body class="bg-gray-100 font-sans">
+
 
 <div class="max-w-7xl mx-auto p-6">
 
+
     <!-- Header -->
-    <header class="flex justify-between items-center mb-8 border-b pb-4">
+
+    <header class="flex justify-between items-center border-b pb-5 mb-8">
+
         <div>
             <h1 class="text-3xl font-bold text-gray-800">
                 🚗 VVR Autos Hub
             </h1>
 
-            <p class="text-gray-500 text-sm mt-1">
-                Live inventory dashboard powered by Google Sheets
+            <p class="text-gray-500 mt-1">
+                Live Inventory Management System
             </p>
         </div>
 
+
         <div class="text-green-600 font-semibold">
-            🟢 Auto Connected
+            🟢 Connected
         </div>
+
     </header>
 
 
-    <!-- Stats Cards -->
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+    <!-- Dashboard Cards -->
 
-        <div class="bg-white p-6 rounded-xl shadow flex items-center">
-            <div class="bg-blue-600 text-white text-2xl p-3 rounded-lg">
+    <div class="grid md:grid-cols-3 gap-5 mb-8">
+
+
+        <div class="bg-white rounded-xl shadow p-6 flex items-center">
+
+            <div class="bg-blue-600 text-white p-3 rounded-lg text-xl">
                 📦
             </div>
 
             <div class="ml-4">
-                <p class="text-gray-500 text-sm">
-                    Total Stock Available
+
+                <p class="text-gray-500">
+                    Total Stock
                 </p>
 
-                <h2 id="stat-total-stock"
+                <h2 id="stat-stock"
                     class="text-3xl font-bold">
                     0
                 </h2>
+
             </div>
+
         </div>
 
 
-        <div class="bg-white p-6 rounded-xl shadow flex items-center">
 
-            <div class="bg-yellow-500 text-white text-2xl p-3 rounded-lg">
+        <div class="bg-white rounded-xl shadow p-6 flex items-center">
+
+
+            <div class="bg-yellow-500 text-white p-3 rounded-lg text-xl">
                 📋
             </div>
 
+
             <div class="ml-4">
-                <p class="text-gray-500 text-sm">
+
+                <p class="text-gray-500">
                     Total Bookings
                 </p>
 
-                <h2 id="stat-total-bookings"
+
+                <h2 id="stat-booking"
                     class="text-3xl font-bold">
                     0
                 </h2>
+
             </div>
+
 
         </div>
 
 
-        <div class="bg-white p-6 rounded-xl shadow flex items-center">
 
-            <div class="bg-green-600 text-white text-2xl p-3 rounded-lg">
+
+        <div class="bg-white rounded-xl shadow p-6 flex items-center">
+
+
+            <div class="bg-green-600 text-white p-3 rounded-lg text-xl">
                 💰
             </div>
 
+
             <div class="ml-4">
-                <p class="text-gray-500 text-sm">
+
+                <p class="text-gray-500">
                     Total Payments
                 </p>
 
-                <h2 id="stat-total-payments"
+
+                <h2 id="stat-payment"
                     class="text-3xl font-bold">
                     0
                 </h2>
+
+
             </div>
 
         </div>
+
 
     </div>
 
 
-    <!-- Chart and Table -->
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Chart + Table -->
+
+    <div class="grid lg:grid-cols-2 gap-6">
 
 
         <!-- Chart -->
 
         <div class="bg-white rounded-xl shadow p-6">
 
+
             <h2 class="font-bold text-xl">
-                Branch Comparison
+                Branch Analytics
             </h2>
 
-            <p class="text-gray-500 text-sm mb-4">
-                Live stock, booking and payment comparison
-            </p>
 
-            <div class="h-80">
-                <canvas id="analyticsChart"></canvas>
+            <div class="h-80 mt-5">
+
+                <canvas id="chart"></canvas>
+
             </div>
+
 
         </div>
 
 
+
         <!-- Table -->
+
 
         <div class="bg-white rounded-xl shadow">
 
+
             <div class="p-5 border-b">
 
-                <h2 class="font-bold text-xl">
-                    Branch Ledger
+
+                <h2 class="text-xl font-bold">
+                    Branch Data
                 </h2>
 
 
                 <input
-                    id="search-input"
+                    id="search"
                     type="text"
-                    placeholder="Search branch..."
+                    placeholder="Search Branch..."
                     oninput="filterTable()"
-                    class="mt-4 w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                    class="mt-3 w-full p-2 border rounded">
+
 
             </div>
 
 
-            <div class="overflow-y-auto max-h-[400px]">
+
+            <div class="max-h-[400px] overflow-y-auto">
+
 
                 <table class="w-full text-left">
 
+
                     <thead class="bg-gray-100 sticky top-0">
+
 
                         <tr>
 
@@ -157,81 +197,178 @@
                                 Branch
                             </th>
 
+
                             <th class="p-3">
                                 Stock
                             </th>
+
 
                             <th class="p-3">
                                 Booking
                             </th>
 
+
                             <th class="p-3">
                                 Payment
                             </th>
+
 
                             <th class="p-3">
                                 Action
                             </th>
 
+
                         </tr>
+
 
                     </thead>
 
 
+
                     <tbody id="table-body">
+
 
                     </tbody>
 
 
                 </table>
 
+
             </div>
+
 
         </div>
 
 
     </div>
 
+
+</div>
+
+
+
+<!-- EDIT POPUP -->
+
+<div id="popup"
+     class="hidden fixed inset-0 bg-black/50 flex items-center justify-center">
+
+
+    <div class="bg-white rounded-xl p-6 w-80">
+
+
+        <h2 class="text-xl font-bold mb-4">
+            Edit Branch
+        </h2>
+
+
+        <p id="edit-branch"
+           class="mb-3 text-gray-600">
+        </p>
+
+
+
+        <input id="edit-stock"
+               type="number"
+               placeholder="Stock"
+               class="border p-2 rounded w-full mb-3">
+
+
+        <input id="edit-booking"
+               type="number"
+               placeholder="Booking"
+               class="border p-2 rounded w-full mb-3">
+
+
+        <input id="edit-payment"
+               type="number"
+               placeholder="Payment"
+               class="border p-2 rounded w-full mb-4">
+
+
+
+        <div class="flex justify-end gap-2">
+
+
+            <button onclick="closePopup()"
+                class="bg-gray-500 text-white px-4 py-2 rounded">
+
+                Cancel
+
+            </button>
+
+
+
+            <button onclick="saveChanges()"
+                class="bg-green-600 text-white px-4 py-2 rounded">
+
+                Save
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
 </div>
 
 
 <script>
-// ===================================
+    // ======================================
 // GOOGLE SHEETS CONFIGURATION
-// ===================================
+// ======================================
 
-const API_KEY = "AIzaSyBRaKHk8iTEf09tQqo6eixAOEdiFusTToA";
+const API_KEY =
+"AIzaSyBRaKHk8iTEf09tQqo6eixAOEdiFusTToA";
+
 
 const SPREADSHEET_ID =
 "1ZawvGDZfqdH2K1A_gr1GkYbYmtrM97ingWGKftkus0w";
 
-// Dynamic range - reads all rows
+
 const RANGE = "Live Stock!A:D";
 
 
-// ===================================
+// ======================================
+// APPS SCRIPT UPDATE API
+// ======================================
+
+const UPDATE_API =
+"https://script.google.com/macros/s/AKfycbwhLsuGJcBjszFbvQbMWbDj8anAVLf6MRlHdNXQFJNPuncOcCu3KEiwvDpi9wbxgZRHzA/exec";
+
+
+// ======================================
 // GLOBAL VARIABLES
-// ===================================
+// ======================================
 
-let allBranchData = [];
+let branchData = [];
 
-let dashboardChart = null;
+let chartInstance = null;
+
+let currentBranch = "";
 
 
-// ===================================
-// AUTO LOAD WHEN PAGE OPENS
-// ===================================
+
+// ======================================
+// LOAD DATA AUTOMATICALLY
+// ======================================
 
 window.addEventListener("load", () => {
+
     loadSheetData();
+
 });
 
 
-// ===================================
-// FETCH DATA FROM GOOGLE SHEETS
-// ===================================
+
+// ======================================
+// GET DATA FROM GOOGLE SHEETS
+// ======================================
 
 async function loadSheetData() {
+
 
     const url =
     `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
@@ -239,69 +376,93 @@ async function loadSheetData() {
 
     try {
 
+
         const response = await fetch(url);
 
-        const data = await response.json();
+
+        const result = await response.json();
 
 
-        console.log("Google Sheet Response:", data);
+        console.log("Sheet Data:", result);
 
 
-        if (data.values) {
 
-            processSheetData(data.values);
+        if(result.values) {
+
+
+            processData(result.values);
+
 
         } else {
 
-            console.error("No sheet data found", data);
+
+            console.error("No data found", result);
+
 
         }
 
 
-    } catch (error) {
+    } catch(error) {
 
-        console.error("Connection error:", error);
+
+        console.error(
+            "Connection failed:",
+            error
+        );
+
 
     }
+
 
 }
 
 
-// ===================================
-// PROCESS SHEET DATA
-// ===================================
+
+// ======================================
+// PROCESS LIVE STOCK DATA
+// ======================================
 
 
-function processSheetData(rows) {
+function processData(rows) {
 
 
-    allBranchData = [];
+    branchData = [];
 
 
     let totalStock = 0;
-    let totalBookings = 0;
-    let totalPayments = 0;
+
+    let totalBooking = 0;
+
+    let totalPayment = 0;
 
 
-    // Skip header row
-    for (let i = 1; i < rows.length; i++) {
+
+    // Skip headings
+
+    for(let i = 1; i < rows.length; i++) {
 
 
         const row = rows[i];
 
 
-        const branch = String(row[0] || "")
-            .trim();
+        const branch =
+        String(row[0] || "")
+        .trim();
 
 
-        // Ignore blank branches
-        // Ignore Totals formula row
-        if (
+
+        // Ignore empty rows
+        // Ignore old totals rows
+
+        if(
             branch === "" ||
             branch.toLowerCase() === "totals"
         ) {
+
             continue;
+
         }
+
 
 
         const stock =
@@ -316,12 +477,16 @@ function processSheetData(rows) {
         parseInt(row[3]) || 0;
 
 
+
         totalStock += stock;
-        totalBookings += booking;
-        totalPayments += payment;
+
+        totalBooking += booking;
+
+        totalPayment += payment;
 
 
-        allBranchData.push({
+
+        branchData.push({
 
             branch: branch,
 
@@ -333,65 +498,77 @@ function processSheetData(rows) {
 
         });
 
+
     }
+
 
 
     // Update dashboard cards
 
-    document.getElementById(
-        "stat-total-stock"
-    ).innerText =
-        totalStock.toLocaleString();
 
-
-    document.getElementById(
-        "stat-total-bookings"
-    ).innerText =
-        totalBookings.toLocaleString();
-
-
-    document.getElementById(
-        "stat-total-payments"
-    ).innerText =
-        totalPayments.toLocaleString();
+    document.getElementById("stat-stock")
+    .innerText =
+    totalStock.toLocaleString();
 
 
 
-    // Update table & chart
+    document.getElementById("stat-booking")
+    .innerText =
+    totalBooking.toLocaleString();
 
-    renderTable(allBranchData);
 
-    renderChart(allBranchData);
+
+    document.getElementById("stat-payment")
+    .innerText =
+    totalPayment.toLocaleString();
+
+
+
+    // Update UI
+
+
+    renderTable(branchData);
+
+    renderChart(branchData);
 
 
 }
-// ===================================
+    // ======================================
 // RENDER TABLE
-// ===================================
+// ======================================
 
 function renderTable(data) {
 
-    const tableBody = document.getElementById("table-body");
 
-    tableBody.innerHTML = "";
+    const table =
+    document.getElementById("table-body");
+
+
+    table.innerHTML = "";
+
 
 
     data.forEach(item => {
 
 
-        const row = document.createElement("tr");
+        const row =
+        document.createElement("tr");
 
 
         let stockDisplay;
 
 
+
         // Low stock warning
-        if (item.stock <= 15) {
+
+        if(item.stock <= 15) {
+
 
             stockDisplay =
-            `<span class="bg-red-100 text-red-600 font-bold px-2 py-1 rounded">
+            `<span class="bg-red-100 text-red-600 px-2 py-1 rounded font-bold">
                 ${item.stock}
             </span>`;
+
 
         } else {
 
@@ -404,179 +581,442 @@ function renderTable(data) {
         }
 
 
+
         row.innerHTML = `
+
 
             <td class="p-3 font-semibold">
                 ${item.branch}
             </td>
 
+
             <td class="p-3">
                 ${stockDisplay}
             </td>
+
 
             <td class="p-3">
                 ${item.booking}
             </td>
 
-            <td class="p-3">
-    ${item.payment}
-</td>
 
-<td class="p-3">
-    <button 
-        onclick="editBranch('${item.branch}', ${item.stock}, ${item.booking}, ${item.payment})"
-        class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-        ✏️ Edit
-    </button>
-</td>
+            <td class="p-3">
+                ${item.payment}
+            </td>
+
+
+            <td class="p-3">
+
+                <button
+                onclick="editBranch(
+                    '${item.branch}',
+                    ${item.stock},
+                    ${item.booking},
+                    ${item.payment}
+                )"
+
+                class="
+                    bg-blue-600
+                    text-white
+                    px-3
+                    py-1
+                    rounded
+                    hover:bg-blue-700
+                ">
+
+                    ✏️ Edit
+
+                </button>
+
+            </td>
+
 
         `;
 
 
-        tableBody.appendChild(row);
+        table.appendChild(row);
 
 
     });
 
+
 }
 
 
-// ===================================
-// SEARCH FILTER
-// ===================================
+
+// ======================================
+// SEARCH FUNCTION
+// ======================================
 
 
 function filterTable() {
 
 
-    const searchText =
-    document.getElementById("search-input")
+    const search =
+    document
+    .getElementById("search")
     .value
     .toLowerCase();
 
 
 
-    const filteredData =
-    allBranchData.filter(item =>
+    const filtered =
+    branchData.filter(item =>
+
+
         item.branch
         .toLowerCase()
-        .includes(searchText)
+        .includes(search)
+
+
     );
 
 
-    renderTable(filteredData);
+
+    renderTable(filtered);
 
 
 }
+
+
+
+
+// ======================================
+// CREATE BAR CHART
+// ======================================
+
+
 function renderChart(data) {
+
+
     const ctx =
     document
-    .getElementById("analyticsChart")
+    .getElementById("chart")
     .getContext("2d");
-    // Remove old chart before creating new one
-    if (dashboardChart) {
-        dashboardChart.destroy();
+
+
+
+    // Remove old chart
+    if(chartInstance) {
+
+
+        chartInstance.destroy();
+
+
     }
-    dashboardChart = new Chart(ctx, {
+
+
+
+    chartInstance = new Chart(ctx, {
+
+
         type: "bar",
+
+
         data: {
+
+
             labels:
-            data.map(item => item.branch),
+            data.map(x => x.branch),
+
+
             datasets: [
+
+
                 {
-                    label: "Stock Available",
+
+                    label: "Stock",
+
                     data:
-                    data.map(item => item.stock),
-                    backgroundColor: "#2563eb"
+                    data.map(x => x.stock),
+
+                    backgroundColor:
+                    "#2563eb"
+
                 },
+
+
                 {
+
+
                     label: "Bookings",
+
+
                     data:
-                    data.map(item => item.booking),
-                    backgroundColor: "#f59e0b"
+                    data.map(x => x.booking),
+
+
+                    backgroundColor:
+                    "#f59e0b"
+
+
                 },
+
+
                 {
+
+
                     label: "Payments",
+
+
                     data:
-                    data.map(item => item.payment),
-                    backgroundColor: "#16a34a"
+                    data.map(x => x.payment),
+
+
+                    backgroundColor:
+                    "#16a34a"
+
+
                 }
+
+
             ]
+
+
         },
+
+
         options: {
+
+
             responsive: true,
+
+
             maintainAspectRatio: false,
+
+
             plugins: {
+
+
                 legend: {
+
+
                     position: "top"
+
+
                 }
+
+
             },
+
+
             scales: {
+
+
                 y: {
+
+
                     beginAtZero: true
+
+
                 }
+
+
             }
+
+
         }
+
+
     });
-} 
-    
-    </div>
-        <!-- Edit Popup -->
-<div id="edit-popup"
-     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-
-    <div class="bg-white rounded-xl p-6 w-80 shadow-xl">
-
-        <h2 class="text-xl font-bold mb-4">
-            Edit Branch Data
-        </h2>
-
-        <p class="text-gray-600 mb-3" id="edit-branch-name">
-            Branch
-        </p>
 
 
-        <input id="edit-stock"
-               type="number"
-               placeholder="Stock"
-               class="w-full border p-2 rounded mb-3">
+}
+
+    // ======================================
+// OPEN EDIT POPUP
+// ======================================
+
+function editBranch(branch, stock, booking, payment) {
 
 
-        <input id="edit-booking"
-               type="number"
-               placeholder="Booking"
-               class="w-full border p-2 rounded mb-3">
+    currentBranch = branch;
 
 
-        <input id="edit-payment"
-               type="number"
-               placeholder="Payment"
-               class="w-full border p-2 rounded mb-4">
+    document
+    .getElementById("edit-branch")
+    .innerText =
+    "Editing: " + branch;
 
 
-        <div class="flex justify-end gap-2">
-
-            <button onclick="closePopup()"
-                    class="bg-gray-400 text-white px-4 py-2 rounded">
-                Cancel
-            </button>
+    document
+    .getElementById("edit-stock")
+    .value =
+    stock;
 
 
-            <button onclick="saveChanges()"
-                    class="bg-green-600 text-white px-4 py-2 rounded">
-                Save
-            </button>
+    document
+    .getElementById("edit-booking")
+    .value =
+    booking;
 
-        </div>
 
-    </div>
+    document
+    .getElementById("edit-payment")
+    .value =
+    payment;
 
-</div>
-    
 
-    function editBranch() {}
-function closePopup() {}
-function saveChanges() {}
+    document
+    .getElementById("popup")
+    .classList.remove("hidden");
+
+
+}
+
+
+
+// ======================================
+// CLOSE POPUP
+// ======================================
+
+
+function closePopup() {
+
+
+    document
+    .getElementById("popup")
+    .classList.add("hidden");
+
+
+}
+
+
+
+// ======================================
+// SAVE CHANGES TO GOOGLE SHEETS
+// ======================================
+
+
+async function saveChanges() {
+
+
+    const stock =
+    parseInt(
+        document.getElementById("edit-stock").value
+    );
+
+
+    const booking =
+    parseInt(
+        document.getElementById("edit-booking").value
+    );
+
+
+    const payment =
+    parseInt(
+        document.getElementById("edit-payment").value
+    );
+
+
+
+    const data = {
+
+
+        branch: currentBranch,
+
+        stock: stock,
+
+        booking: booking,
+
+        payment: payment
+
+
+    };
+
+
+
+    try {
+
+
+        const response = await fetch(UPDATE_API, {
+
+
+            method: "POST",
+
+
+            body: JSON.stringify(data)
+
+
+        });
+
+
+
+        const result =
+        await response.json();
+
+
+
+        if(result.success) {
+
+
+            alert("✅ Data updated successfully!");
+
+
+            closePopup();
+
+
+            // Reload latest data
+            loadSheetData();
+
+
+        }
+
+
+        else {
+
+
+            alert(
+                "❌ Update failed: " +
+                result.message
+            );
+
+
+        }
+
+
+
+    } catch(error) {
+
+
+        console.error(error);
+
+
+        alert(
+            "❌ Connection failed. Check console."
+        );
+
+
+    }
+
+
+}
+
+
+
+// ======================================
+// OPTIONAL AUTO REFRESH EVERY 30 SECONDS
+// ======================================
+
+
+setInterval(() => {
+
+
+    loadSheetData();
+
+
+}, 30000);
+
+
+
+
+// ======================================
+// END OF JAVASCRIPT
+// ======================================
 </script>
+
+
 </body>
+
+
 </html>
