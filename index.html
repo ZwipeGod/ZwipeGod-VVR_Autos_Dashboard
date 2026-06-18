@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VVR Autos Live Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+<div class="max-w-7xl mx-auto p-6">
+
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-8 border-b pb-4">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">
+                🚗 VVR Autos Hub
+            </h1>
+
+            <p class="text-gray-500 text-sm mt-1">
+                Live inventory dashboard powered by Google Sheets
+            </p>
+        </div>
+
+        <div class="text-green-600 font-semibold">
+            🟢 Auto Connected
+        </div>
+    </header>
+
+
+    <!-- Stats Cards -->
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+
+        <div class="bg-white p-6 rounded-xl shadow flex items-center">
+            <div class="bg-blue-600 text-white text-2xl p-3 rounded-lg">
+                📦
+            </div>
+
+            <div class="ml-4">
+                <p class="text-gray-500 text-sm">
+                    Total Stock Available
+                </p>
+
+                <h2 id="stat-total-stock"
+                    class="text-3xl font-bold">
+                    0
+                </h2>
+            </div>
+        </div>
+
+
+        <div class="bg-white p-6 rounded-xl shadow flex items-center">
+
+            <div class="bg-yellow-500 text-white text-2xl p-3 rounded-lg">
+                📋
+            </div>
+
+            <div class="ml-4">
+                <p class="text-gray-500 text-sm">
+                    Total Bookings
+                </p>
+
+                <h2 id="stat-total-bookings"
+                    class="text-3xl font-bold">
+                    0
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="bg-white p-6 rounded-xl shadow flex items-center">
+
+            <div class="bg-green-600 text-white text-2xl p-3 rounded-lg">
+                💰
+            </div>
+
+            <div class="ml-4">
+                <p class="text-gray-500 text-sm">
+                    Total Payments
+                </p>
+
+                <h2 id="stat-total-payments"
+                    class="text-3xl font-bold">
+                    0
+                </h2>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Chart and Table -->
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+
+        <!-- Chart -->
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <h2 class="font-bold text-xl">
+                Branch Comparison
+            </h2>
+
+            <p class="text-gray-500 text-sm mb-4">
+                Live stock, booking and payment comparison
+            </p>
+
+            <div class="h-80">
+                <canvas id="analyticsChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <!-- Table -->
+
+        <div class="bg-white rounded-xl shadow">
+
+            <div class="p-5 border-b">
+
+                <h2 class="font-bold text-xl">
+                    Branch Ledger
+                </h2>
+
+
+                <input
+                    id="search-input"
+                    type="text"
+                    placeholder="Search branch..."
+                    oninput="filterTable()"
+                    class="mt-4 w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500">
+
+            </div>
+
+
+            <div class="overflow-y-auto max-h-[400px]">
+
+                <table class="w-full text-left">
+
+                    <thead class="bg-gray-100 sticky top-0">
+
+                        <tr>
+
+                            <th class="p-3">
+                                Branch
+                            </th>
+
+                            <th class="p-3">
+                                Stock
+                            </th>
+
+                            <th class="p-3">
+                                Booking
+                            </th>
+
+                            <th class="p-3">
+                                Payment
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="table-body">
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+// ===================================
+// GOOGLE SHEETS CONFIGURATION
+// ===================================
+
+const API_KEY = "AIzaSyBRaKHk8iTEf09tQqo6eixAOEdiFusTToA";
+
+const SPREADSHEET_ID =
+"1ZawvGDZfqdH2K1A_gr1GkYbYmtrM97ingWGKftkus0w";
+
+// Dynamic range - reads all rows
+const RANGE = "Sheet1!A:D";
+
+
+// ===================================
+// GLOBAL VARIABLES
+// ===================================
+
+let allBranchData = [];
+
+let dashboardChart = null;
+
+
+// ===================================
+// AUTO LOAD WHEN PAGE OPENS
+// ===================================
+
+window.addEventListener("load", () => {
+    loadSheetData();
+});
+
+
+// ===================================
+// FETCH DATA FROM GOOGLE SHEETS
+// ===================================
+
+async function loadSheetData() {
+
+    const url =
+    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+
+
+    try {
+
+        const response = await fetch(url);
+
+        const data = await response.json();
+
+
+        console.log("Google Sheet Response:", data);
+
+
+        if (data.values) {
+
+            processSheetData(data.values);
+
+        } else {
+
+            console.error("No sheet data found", data);
+
+        }
+
+
+    } catch (error) {
+
+        console.error("Connection error:", error);
+
+    }
+
+}
+
+
+// ===================================
+// PROCESS SHEET DATA
+// ===================================
+
+
+function processSheetData(rows) {
+
+
+    allBranchData = [];
+
+
+    let totalStock = 0;
+    let totalBookings = 0;
+    let totalPayments = 0;
+
+
+    // Skip header row
+    for (let i = 1; i < rows.length; i++) {
+
+
+        const row = rows[i];
+
+
+        const branch = String(row[0] || "")
+            .trim();
+
+
+        // Ignore blank branches
+        // Ignore Totals formula row
+        if (
+            branch === "" ||
+            branch.toLowerCase() === "totals"
+        ) {
+            continue;
+        }
+
+
+        const stock =
+        parseInt(row[1]) || 0;
+
+
+        const booking =
+        parseInt(row[2]) || 0;
+
+
+        const payment =
+        parseInt(row[3]) || 0;
+
+
+        totalStock += stock;
+        totalBookings += booking;
+        totalPayments += payment;
+
+
+        allBranchData.push({
+
+            branch: branch,
+
+            stock: stock,
+
+            booking: booking,
+
+            payment: payment
+
+        });
+
+    }
+
+
+    // Update dashboard cards
+
+    document.getElementById(
+        "stat-total-stock"
+    ).innerText =
+        totalStock.toLocaleString();
+
+
+    document.getElementById(
+        "stat-total-bookings"
+    ).innerText =
+        totalBookings.toLocaleString();
+
+
+    document.getElementById(
+        "stat-total-payments"
+    ).innerText =
+        totalPayments.toLocaleString();
+
+
+
+    // Update table & chart
+
+    renderTable(allBranchData);
+
+    renderChart(allBranchData);
+
+
+}
+// ===================================
+// RENDER TABLE
+// ===================================
+
+function renderTable(data) {
+
+    const tableBody = document.getElementById("table-body");
+
+    tableBody.innerHTML = "";
+
+
+    data.forEach(item => {
+
+
+        const row = document.createElement("tr");
+
+
+        let stockDisplay;
+
+
+        // Low stock warning
+        if (item.stock <= 15) {
+
+            stockDisplay =
+            `<span class="bg-red-100 text-red-600 font-bold px-2 py-1 rounded">
+                ${item.stock}
+            </span>`;
+
+        } else {
+
+
+            stockDisplay =
+            `<span class="font-semibold">
+                ${item.stock}
+            </span>`;
+
+        }
+
+
+        row.innerHTML = `
+
+            <td class="p-3 font-semibold">
+                ${item.branch}
+            </td>
+
+            <td class="p-3">
+                ${stockDisplay}
+            </td>
+
+            <td class="p-3">
+                ${item.booking}
+            </td>
+
+            <td class="p-3">
+                ${item.payment}
+            </td>
+
+        `;
+
+
+        tableBody.appendChild(row);
+
+
+    });
+
+}
+
+
+// ===================================
+// SEARCH FILTER
+// ===================================
+
+
+function filterTable() {
+
+
+    const searchText =
+    document.getElementById("search-input")
+    .value
+    .toLowerCase();
+
+
+
+    const filteredData =
+    allBranchData.filter(item =>
+        item.branch
+        .toLowerCase()
+        .includes(searchText)
+    );
+
+
+    renderTable(filteredData);
+
+
+}
+function renderChart(data) {
+    const ctx =
+    document
+    .getElementById("analyticsChart")
+    .getContext("2d");
+    // Remove old chart before creating new one
+    if (dashboardChart) {
+        dashboardChart.destroy();
+    }
+    dashboardChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels:
+            data.map(item => item.branch),
+            datasets: [
+                {
+                    label: "Stock Available",
+                    data:
+                    data.map(item => item.stock),
+                    backgroundColor: "#2563eb"
+                },
+                {
+                    label: "Bookings",
+                    data:
+                    data.map(item => item.booking),
+                    backgroundColor: "#f59e0b"
+                },
+                {
+                    label: "Payments",
+                    data:
+                    data.map(item => item.payment),
+                    backgroundColor: "#16a34a"
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "top"
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>
