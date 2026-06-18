@@ -419,8 +419,16 @@ function renderTable(data) {
             </td>
 
             <td class="p-3">
-                ${item.payment}
-            </td>
+    ${item.payment}
+</td>
+
+<td class="p-3">
+    <button 
+        onclick="editBranch('${item.branch}', ${item.stock}, ${item.booking}, ${item.payment})"
+        class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+        ✏️ Edit
+    </button>
+</td>
 
         `;
 
